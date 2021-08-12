@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
@@ -19,7 +20,10 @@ import javax.swing.JPanel;
  *
  */
 public class App extends JPanel {
+
+    public static ArrayList<int[]> coords = new ArrayList<>();
     public static void main( String[] args ) throws IOException {
+        
         File folder = new File("Cropped photos");
         File[] sortedFolder = sort(folder.listFiles()); //sort by date
 
@@ -31,57 +35,46 @@ public class App extends JPanel {
             File f = sortedFolder[i];
             BufferedImage image = ImageIO.read(f);
 
-            // if (i == 0) { TODO auto crop the originial pictures
-            //     height = 163;
-            //     width = 187;
-            // }
-            // else if (image.getWidth() != width || image.getHeight() != height) {
-            //     int x = 419;
-            //     int y = 102;
-            //     image = image.getSubimage(x, y, image.getWidth()-x-10, image.getHeight()-300);
-            // }
+            /*
+            if (i == 0) { TODO auto crop the originial pictures
+                height = 163;
+                width = 187;
+            }
+            else if (image.getWidth() != width || image.getHeight() != height) {
+                int x = 419;
+                int y = 102;
+                image = image.getSubimage(x, y, image.getWidth()-x-10, image.getHeight()-300);
+            }
+            */
             
             double[] numbers = allCalculations(image);
-
-
             arr[i][0] = f.getName();     // date
             arr[i][1] = "" + numbers[1]; // leading edge
             arr[i][2] = "" + numbers[0]; // color counter
         }
 
-        // for (int i = 0; i < arr.length; i++) { // print out table
-        //     for (int j = 0; j < arr[0].length; j++) {
-        //         System.out.print(arr[i][j] + "\t");
-        //     }
-        //     System.out.println();
-        // }
+        /*
+        for (int i = 0; i < arr.length; i++) { // print out table
+            for (int j = 0; j < arr[0].length; j++) {
+                System.out.print(arr[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        */
 
-        JFrame frame = new JFrame("Map");
-            frame.setSize(187, 163);
-            // frame.add();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // JFrame frame = new JFrame("Map");
+        //     frame.setSize(187, 163);
+        //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //     frame.setVisible(true);
     }
 
-    public static File[] sort(File[] folder) {
-     
-        Comparator<File> c = new Comparator<File>(){
-
-            @Override
-            public int compare(File o1, File o2) {
-                SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd");
-                try {
-                    Date date1 = formatter.parse(o1.getName());
-                    Date date2 = formatter.parse(o2.getName());
-                    return date1.compareTo(date2);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }  
-        };
-
-        Arrays.sort(folder, c);
-        return folder;
+    @Override
+    public void paintComponent(Graphics g) {
+        g.setColor(Color.BLACK);
+        for (int i = 0; i < coords.size(); i++) {
+            int[] coordinate = coords.get(i);
+            g.drawRect(coordinate[0], coordinate[1], 1, 1);
+        }
     }
 
     public static double[] allCalculations(BufferedImage image) throws IOException {
@@ -97,6 +90,9 @@ public class App extends JPanel {
                         maxDistance = temp;
                     }
                     count++;
+                    int[] coordinate = {i,j};
+                    coords.add(coordinate);
+                    // repaint();
                 }
             }
         }
@@ -133,10 +129,26 @@ public class App extends JPanel {
         }
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.BLACK);
-        
+    public static File[] sort(File[] folder) {
+     
+        Comparator<File> c = new Comparator<File>(){
+
+            @Override
+            public int compare(File o1, File o2) {
+                SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd");
+                try {
+                    Date date1 = formatter.parse(o1.getName());
+                    Date date2 = formatter.parse(o2.getName());
+                    return date1.compareTo(date2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }  
+        };
+
+        Arrays.sort(folder, c);
+        return folder;
     }
+    
 }
