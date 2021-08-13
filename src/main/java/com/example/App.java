@@ -16,8 +16,8 @@ public class App extends JPanel {
     public static ArrayList<int[]> coords = new ArrayList<>();
     public static void main( String[] args ) throws IOException {
 
-        /*
-        if (i == 0) { TODO auto crop the originial pictures
+        /* TODO auto crop the originial pictures
+        if (i == 0) { 
             height = 163;
             width = 187;
         }
@@ -28,10 +28,9 @@ public class App extends JPanel {
         }
         */
 
-
         JFrame frame = new JFrame("Map");
-            frame.setSize(187*4, 163*4);
-            frame.add(new MyJPanel());
+            frame.setSize(187*4, 163*4 + 50); // JFrame pixel = 4 x pic pixel
+            frame.add(new MyJPanel());        // extra 50 pixels at top for space for header button/label
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
     }

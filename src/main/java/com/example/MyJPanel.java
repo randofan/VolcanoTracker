@@ -1,8 +1,8 @@
 package com.example;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -11,25 +11,46 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class MyJPanel extends JPanel implements KeyListener {
+public class MyJPanel extends JPanel implements ActionListener {
 
     public static LavaMap[] maps;
     private int position = 0;
+    JButton previous;
+    JButton next;
+    JLabel date;
 
     public MyJPanel() throws IOException {
-        addKeyListener(this);
         
         File folder = new File("Cropped photos");
-        File[] sortedFolder = sort(folder.listFiles()); // sort by date
+        File[] sortedFolder = sort(folder.listFiles()); // sort pictures by date
         maps = new LavaMap[sortedFolder.length];
 
         System.out.println("Color\tColor Count\tLeading Edge");
-        for (int i = 0; i < sortedFolder.length; i++) {
-            maps[i] = new LavaMap(sortedFolder[i]);
-            System.out.println(maps[i]);
-        }
+        // for (int i = 0; i < sortedFolder.length; i++) { // adds all LavaMap objects to the File array
+        //     maps[i] = new LavaMap(sortedFolder[i]);
+        //     System.out.println(maps[i]);
+        // }
+
+        maps[0] = new LavaMap(sortedFolder[25]); // testing code
+        System.out.println(maps[0]);
+
         this.position = 0;
+
+
+        previous = new JButton("<");
+            previous.addActionListener(this);
+            this.add(previous);
+
+        date = new JLabel(maps[position].getName());
+            this.add(date);
+
+        next = new JButton(">");
+            next.addActionListener(this);
+            this.add(next);
+
         repaint();
     }
 
@@ -62,28 +83,18 @@ public class MyJPanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-    }
-    
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void actionPerformed(ActionEvent e) {
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        switch(e.getKeyCode()) {
-            case KeyEvent.VK_RIGHT:
-                // if (position >= maps.length-1) position++;
-                // System.out.println("Right Arrow");
-                repaint();
-                break;
-            case KeyEvent.VK_LEFT:
-                // if (position <= 0) position--;
-                // System.out.println("Left Arrow");
-                repaint();
-                break;
-            default: break;
+        if(e.getSource().equals(next)) {
+            if (position < maps.length-1) position++;
+            date.setText(maps[position].getName());            
+            repaint();
         }
-        
+        if(e.getSource().equals(previous)) {
+            if (position > 0) position--;
+            date.setText(maps[position].getName());
+            repaint();
+        }
+             
     }
 }
