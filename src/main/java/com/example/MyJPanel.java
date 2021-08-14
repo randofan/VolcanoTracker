@@ -3,7 +3,9 @@ package com.example;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,24 +25,24 @@ public class MyJPanel extends JPanel implements ActionListener {
     JLabel date;
 
     public MyJPanel() throws IOException {
-        
-        File folder = new File("Cropped photos");
-        File[] sortedFolder = sort(folder.listFiles()); // sort pictures by date
+
+        File folder = new File("Cropped photos"); // sort pictures by date in array
+        File[] sortedFolder = sort(folder.listFiles());
         maps = new LavaMap[sortedFolder.length];
 
-        System.out.println("Color\tColor Count\tLeading Edge");
-        // for (int i = 0; i < sortedFolder.length; i++) { // adds all LavaMap objects to the File array
-        //     maps[i] = new LavaMap(sortedFolder[i]);
-        //     System.out.println(maps[i]);
-        // }
+        File f = new File("output.txt"); // writes all data to a .txt file
+        FileWriter bw = new FileWriter(f);
+        bw.write("Color\tColor Count\tLeading Edge");
 
-        maps[0] = new LavaMap(sortedFolder[25]); // testing code
-        System.out.println(maps[0]);
+        for (int i = 0; i < sortedFolder.length; i++) { // adds all LavaMap objects to the File array
+            maps[i] = new LavaMap(sortedFolder[i]);
+            bw.write(maps[i].toString());
+        }
+        bw.close();
 
         this.position = 0;
 
-
-        previous = new JButton("<");
+        previous = new JButton("<"); // control buttons
             previous.addActionListener(this);
             this.add(previous);
 
@@ -57,9 +59,14 @@ public class MyJPanel extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        maps[position].drawMap(g);
+        maps[position].drawMap(g); // draws each map
     }
     
+    /**
+     * 
+     * @param folder
+     * @return sorted folder by date
+     */
     public static File[] sort(File[] folder) {
      
         Comparator<File> c = new Comparator<File>(){
@@ -68,8 +75,8 @@ public class MyJPanel extends JPanel implements ActionListener {
             public int compare(File o1, File o2) {
                 SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd");
                 try {
-                    Date date1 = (Date) formatter.parse(o1.getName());
-                    Date date2 = (Date) formatter.parse(o2.getName());
+                    Date date1 = formatter.parse(o1.getName());
+                    Date date2 = formatter.parse(o2.getName());
                     return date1.compareTo(date2);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -86,8 +93,8 @@ public class MyJPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getSource().equals(next)) {
-            if (position < maps.length-1) position++;
-            date.setText(maps[position].getName());            
+            if (position < maps.length-1) position++; // updates map[position] to next element and repaints
+            date.setText(maps[position].getName());   // reset label text        
             repaint();
         }
         if(e.getSource().equals(previous)) {

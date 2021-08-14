@@ -4,7 +4,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -61,37 +60,14 @@ public class LavaMap {
     public boolean colorPicker(Color clr, int x, int y) throws IOException {
 
         float[] hsb = Color.RGBtoHSB(clr.getRed(), clr.getGreen(), clr.getBlue(), null);
-        if (!(hsb[0] < 15 && hsb[1] < 0.95 && hsb[2] > 0.25) &&
-            hsb[2] > 0.25) {
-            // ((hsb[0] > 0.9 || hsb[0] < 0.09) && hsb[1] > 0.9 && hsb[2] > 0.1)) {
-            System.out.println("" + x + ", " + y + ": " + Arrays.toString(hsb));
+        if (hsb[2] > 0.29 && // gets rid of black
+            (!(hsb[0] < 1 && hsb[1] < 0.811 && hsb[2] > 0.1) || // identifies red
+            ((hsb[0] > 0.95 || hsb[0] < 0.09) && ((hsb[1] > 0.4 && hsb[1] < 0.57) || (hsb[1] > 0.8 && hsb[1] < 0.9)) && hsb[2] > 0.86))) { // identifies pink 
+
+            // System.out.println("" + x + ", " + y + ": " + Arrays.toString(hsb));
             return true;
         }
         else return false;
-
-        // int blue = clr.getBlue(), red = clr.getRed(), green = clr.getGreen();
-        // if (red > 245 && red < 256 && green > 0 && green < 10 && blue > 0 && blue < 10) {
-        //     return true;
-        // }
-        // else if (red > 170 && red < 180 && green > 30 && green < 40 && blue > 29 && blue < 39) {
-        //     return true;
-        // }
-        // else if (red > 236 && red < 246 && green > 96 && green < 106 && blue > 83 && blue < 103) {
-        //     return true;
-        // }
-        
-        // else if (red > 245 && red < 256 && green > 118 && green < 128 && blue > 125 && blue < 135) {
-        //     return true;
-        // }
-        // else if (red > 163 && red < 173 && green > 28 && green < 38 && blue > 42 && blue < 52) {
-        //     return true;
-        // }
-        // else if (red > 240 && red < 250 && green > 164 && green < 174 && blue > 168 && blue < 178) {
-        //     return true;
-        // }
-        // else {
-        //     return false;
-        // }
     }
 
     public void drawMap(Graphics g) {
