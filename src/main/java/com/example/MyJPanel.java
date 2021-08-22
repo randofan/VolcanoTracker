@@ -30,9 +30,9 @@ public class MyJPanel extends JPanel implements ActionListener {
         File[] sortedFolder = sort(folder.listFiles());
         maps = new LavaMap[sortedFolder.length];
 
-        File f = new File("output.txt"); // writes all data to a .txt file
+        File f = new File("output.csv"); // writes all data to a .txt file
         FileWriter bw = new FileWriter(f);
-        bw.write("Color\tColor Count\tLeading Edge");
+        bw.write("Color,Color Count,Leading Edge\n");
 
         for (int i = 0; i < sortedFolder.length; i++) { // adds all LavaMap objects to the File array
             maps[i] = new LavaMap(sortedFolder[i]);

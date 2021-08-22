@@ -54,7 +54,7 @@ public class LavaMap {
 
     @Override
     public String toString() {
-        return (this.name + "\t" + this.colorCounter + "\t" + this.leadingEdge);
+        return (this.name + "," + this.colorCounter + "," + this.leadingEdge + "\n");
     }
 
     public boolean colorPicker(Color clr, int x, int y) throws IOException {
